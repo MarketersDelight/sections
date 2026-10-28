@@ -17,7 +17,7 @@ add_filter( 'md_archive_meta_items', 'md_archive_meta_last_added_item' );
 function md_archive_meta_last_added_item( $items ) {
 	$items['last_added'] = array(
 		'title' => __( 'Last Added', 'md-sections' ),
-		'placeholder' => __( 'last added', 'md-sections' ),
+		'placeholder' => __( 'added', 'md-sections' ),
 		'icon' => 'calendar-alt',
 		'meta_icon' => 'calendar',
 		'color' => '#d44c3c',
@@ -69,7 +69,7 @@ function md_archive_meta_last_added( $fields, $post_type, $term = null ) {
 
 	$time = $updated ? get_post_modified_time( 'U', false, $posts[0] ) : get_post_time( 'U', false, $posts[0] );
 	$date = ! empty( $fields['settings']['date'] ) ? date_i18n( get_option( 'date_format' ), $time ) : sprintf( __( '%s ago', 'md-sections' ), human_time_diff( $time, current_time( 'U' ) ) );
-	$label = ! empty( $fields['name'] ) ? $fields['name'] : ( $updated ? __( 'last updated', 'md-sections' ) : __( 'last added', 'md-sections' ) );
+	$label = ! empty( $fields['name'] ) ? $fields['name'] : ( $updated ? __( 'updated', 'md-sections' ) : __( 'added', 'md-sections' ) );
 
 	// The whole date reads as the value, like a count's number
 
