@@ -12,7 +12,7 @@ A [Marketers Delight](https://marketersdelight.com/) drop-in that builds your ar
 - **Query Loop**: list posts from any post type, with their own count, order, categories, terms, layout and pagination
 - **Taxonomy Filter**: links to a taxonomy's terms, with post counts, for filtering an archive
 - **Section Title**: a title, text, image, cover and call to action, built like MD's Page Title
-- **Archive Meta**: Post Count, Comment Count, Last Added and Text items, in the archive title or in each category's title when the loop lists posts by category
+- **Archive Meta**: Post Count, Comment Count, Last Added and Text items, in the archive title or in each category's title when an archive lists its categories
   - Each item takes a title position: Before Title, Inside Title, After Title or Title Aside
   - Post Count, Last Added and Text can also be added to bylines on single posts
 - Styles are added to MD's compiled stylesheet
