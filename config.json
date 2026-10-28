@@ -1,0 +1,11 @@
+{
+	"name" : "Sections",
+	"author" : "Alex, Kolakube",
+	"version" : "1.0",
+	"description" : "Build archives and singles from Sections: Query Loops, Taxonomy Filters, Section Titles and Archive Meta.",
+	"dropin_url" : "https://marketersdelight.com/dropins/sections/",
+	"author_url" : "https://marketersdelight.com/",
+	"icon" : "dashicons-layout",
+	"colors" : "#3858a4",
+	"priority" : 1
+}
