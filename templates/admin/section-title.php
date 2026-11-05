@@ -9,7 +9,7 @@
 
 	<div class="md-section-title-content md-tab-content active">
 
-		<div class="md-section-title-field md-sep-micro">
+		<div class="md-section-title-field mb-third">
 
 			<div class="md-section-title-heading">
 				<?php $fields->field( array( 'builder', $group, 'section_heading' ), array(
@@ -28,7 +28,7 @@
 
 		</div>
 
-		<div class="md-sep-micro">
+		<div class="mb-third">
 			<?php $fields->field( array( 'builder', $group, 'section_text' ), array(
 				'type' => 'textarea',
 				'label' => __( 'Text', 'md-sections' ),
@@ -36,7 +36,7 @@
 			) ); ?>
 		</div>
 
-		<div class="md-sep-micro">
+		<div class="mb-third">
 			<?php $fields->field( array( 'builder', $group, 'section_display' ), array(
 				'type' => 'checkbox',
 				'options' => array(
@@ -70,14 +70,14 @@
 
 			<div class="col col2">
 
-				<div class="md-sep-small">
+				<div class="mb-single">
 					<?php $fields->field( array( 'builder', $group, 'section_cover', 'bg_color' ), array(
 						'type' => 'color',
 						'label' => __( 'Background color', 'md-sections' )
 					) ); ?>
 				</div>
 
-				<div class="md-sep-small">
+				<div class="mb-single">
 					<?php $fields->field( array( 'builder', $group, 'section_cover', 'display' ), array(
 						'type' => 'checkbox',
 						'label' => __( 'Cover settings', 'md-sections' ),

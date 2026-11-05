@@ -58,7 +58,7 @@ class md_archive extends md_api {
 	 */
 
 	private function group( $context ) {
-		echo '<div class="md-widget md-toggle md-sep-small">'.
+		echo '<div class="md-widget md-toggle mb-single">'.
 			 '<h3 class="md-widget-title">' . esc_html( $this->name ) . '</h3>'.
 			 '<div class="md-widget-item">';
 

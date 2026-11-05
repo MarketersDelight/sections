@@ -118,7 +118,7 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 			</div>
 		</div>
 		<div class="md-query-loop-category-settings md-conditional-item md-conditional-category md-conditional-category_posts<?php echo $shows_category ? ' is-condition' : ''; ?>">
-			<hr class="md-sep-small" />
+			<hr class="mb-single" />
 			<h4><?php echo esc_html__( 'Category', 'md-sections' ); ?></h4>
 			<p class="description"><?php echo esc_html__( 'These settings apply to this query and do not inherit the source archive’s category layout.', 'md-sections' ); ?></p>
 			<div class="md-query-loop-grid md-full-select">

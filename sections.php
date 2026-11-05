@@ -10,7 +10,10 @@
  * Version: 1.0
  * Requires at least: 6.2
  * Requires PHP: 7.4
- * Requires MD: 6.1
+ * Requires MD: 6.2
+ * Icon: dashicons-layout
+ * Colors: #3858a4
+ * Load Priority: 1
  */
 
 class md_sections extends md_api {

@@ -173,7 +173,7 @@ class md_archive_meta extends md_api {
 			'scope' => (bool) $scope
 		) );
 
-		echo '<hr class="md-sep-small" />';
+		echo '<hr class="mb-single" />';
 
 		$this->fields->field( 'display', array(
 			'type' => 'checkbox',
