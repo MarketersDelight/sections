@@ -36,7 +36,7 @@ class md_sections extends md_api {
 		require_once __DIR__ . '/elements/taxonomy-filter.php';
 		require_once __DIR__ . '/elements/section-title.php';
 
-		if ( is_admin() )
+		if ( md_loads_settings() )
 			require_once __DIR__ . '/settings.php';
 
 		require_once __DIR__ . '/archive-meta/archive-meta.php';

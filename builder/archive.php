@@ -98,7 +98,7 @@ class md_archive_sections extends md_api {
 			$element_fields = $element['fields'] ?? array();
 
 			if ( is_string( $element_fields ) )
-				$element_fields = is_admin() ? call_user_func( $element_fields ) : array();
+				$element_fields = md_loads_settings() ? call_user_func( $element_fields ) : array();
 
 			if ( $element_fields )
 				$fields = array_merge( $fields, $element_fields );
