@@ -54,10 +54,9 @@ function md_archive_meta_link( $text, $url ) {
 }
 
 /**
- * Get Archive Meta markup for a builder area, keyed by the title position
- * each item is placed in. Items without a position are After Title. The
- * archives area measures the current archive; category_entry measures
- * the given term, with the settings of the post type its loop lists.
+ * Archive Meta markup for a builder area, keyed by title position (default
+ * After Title). archives measures the current archive; category_entry measures
+ * the given term.
  *
  * @since 1.0
  */

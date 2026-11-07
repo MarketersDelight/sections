@@ -191,11 +191,9 @@ class md_archive_sections extends md_api {
 	}
 
 	/**
-	 * Get section elements available to the current post type. An element's
-	 * callback outputs one root element. Set 'classes' => 'col-full' for a
-	 * full-width element; others share a row with their neighbors. 'fields'
-	 * takes the save rules, or a function name that returns them, so a
-	 * costly schema is only built in the admin.
+	 * Section elements available to a post type. A callback outputs one root
+	 * element. 'classes' => 'col-full' goes full width; 'fields' takes save rules
+	 * or a function returning them.
 	 *
 	 * @since 1.0
 	 */
@@ -301,10 +299,8 @@ class md_archive_sections extends md_api {
 	}
 
 	/**
-	 * Render callable elements assigned to one section area. Each element's
-	 * callback must output a single root element: full-width elements (classes
-	 * col-full) print straight into the area's stack, and neighboring
-	 * elements share a row as grid items.
+	 * Render the elements assigned to a section area: full-width ones straight
+	 * into the stack, neighbors sharing a row as grid items.
 	 *
 	 * @since 1.0
 	 */
