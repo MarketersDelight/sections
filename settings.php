@@ -59,7 +59,7 @@ class md_archive extends md_api {
 
 	private function group( $context ) {
 		echo '<div class="md-widget md-toggle mb-single">'.
-			 '<h3 class="md-widget-title">' . esc_html( $this->name ) . '</h3>'.
+			 '<h3 class="md-widget-title"><span>' . esc_html( $this->name ) . '<span class="md-widget-description">' . esc_html__( 'Query Loops, filters, titles and archive details', 'md-sections' ) . '</span></span></h3>'.
 			 '<div class="md-widget-item">';
 
 		$this->fields->settings_group( $context );
