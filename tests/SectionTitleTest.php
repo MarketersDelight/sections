@@ -158,6 +158,24 @@ class SectionTitleTest extends MD_InheritanceTestCase {
 		$this->assertContains( 'remove', $fields['page_cta']['options'] );
 	}
 
+	public function test_full_width_row_prints_its_own_inner() {
+		ob_start();
+		md_section_title( array( 'section_title' => 'Band', 'section_cover' => array( 'bg_color' => '#1f1d1c' ) ), 'post', 'section1', null, true );
+		$html = ob_get_clean();
+
+		$this->assertSame( 1, substr_count( $html, 'class="inner"' ) );
+	}
+
+	public function test_never_prints_an_inner_inside_another() {
+		$GLOBALS['__test_did_actions'] = array( 'md_hook_content_box_top' => 1 );
+		ob_start();
+		md_section_title( array( 'section_title' => 'Band' ), 'post', 'section1', null, true );
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( 'Band', $html );
+		$this->assertStringNotContainsString( 'class="inner"', $html );
+	}
+
 	public function test_empty_row_renders_nothing() {
 		$this->assertSame( '', $this->render( array( 'section_cover' => array( 'bg_color' => '#1f1d1c' ) ) ) );
 	}

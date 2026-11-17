@@ -20,3 +20,9 @@
 .sidebar .archive-sections { --md-columns-base: 1; }
 
 .archive-sections-group > .box > .post-footer { padding-block-start: var(--md-half); }
+
+/* ROWS */
+
+.section-rows > * { margin-block: 0; }
+
+.section-rows > :not(.cover) { padding-block: var(--md-double); }

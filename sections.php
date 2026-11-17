@@ -10,7 +10,7 @@
  * Version: 1.0.1
  * Requires at least: 6.2
  * Requires PHP: 7.4
- * Requires MD: 6.2
+ * Requires MD: 6.2.3
  * Icon: dashicons-layout
  * Colors: #3858a4
  * Load Priority: 1

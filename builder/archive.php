@@ -9,6 +9,8 @@ class md_archive_sections extends md_api {
 
 	protected $main_query;
 
+	protected $rows = array( 'after_header', 'before_footer' );
+
 	/**
 	 * Register Archive Sections query hooks.
 	 *
@@ -49,10 +51,12 @@ class md_archive_sections extends md_api {
 	 */
 
 	public function template() {
+		add_action( 'md_hook_before_content_box', array( $this, 'after_header' ) );
 		add_action( 'md_hook_loop_before', array( $this, 'before_loop' ), 20 );
 		add_action( 'md_hook_loop_after', array( $this, 'after_loop' ) );
 		add_action( 'md_hook_before_sidebar', array( $this, 'before_sidebar' ) );
 		add_action( 'md_hook_after_sidebar', array( $this, 'after_sidebar' ) );
+		add_action( 'md_hook_before_footer', array( $this, 'before_footer' ) );
 	}
 
 	/**
@@ -159,12 +163,19 @@ class md_archive_sections extends md_api {
 			'description' => $text['description'],
 			'active_tab' => 'before_loop',
 			'tabs' => array(
+				'after_header' => __( 'After Header', 'md-sections' ),
 				'before_loop' => __( 'Before Content', 'md-sections' ),
 				'after_loop' => __( 'After Content', 'md-sections' ),
 				'before_sidebar' => __( 'Before Sidebar', 'md-sections' ),
-				'after_sidebar' => __( 'After Sidebar', 'md-sections' )
+				'after_sidebar' => __( 'After Sidebar', 'md-sections' ),
+				'before_footer' => __( 'Before Footer', 'md-sections' )
 			),
 			'areas' => array(
+				'after_header' => array(
+					'title' => __( 'After Header', 'md-sections' ),
+					'description' => __( 'Shown full width under the header.', 'md-sections' ),
+					'tab' => 'after_header'
+				),
 				'before_loop' => array(
 					'title' => __( 'Before Content', 'md-sections' ),
 					'description' => $text['before_loop'],
@@ -184,6 +195,11 @@ class md_archive_sections extends md_api {
 					'title' => __( 'After Sidebar', 'md-sections' ),
 					'description' => __( 'Shown after the sidebar widgets.', 'md-sections' ),
 					'tab' => 'after_sidebar'
+				),
+				'before_footer' => array(
+					'title' => __( 'Before Footer', 'md-sections' ),
+					'description' => __( 'Shown full width above the footer.', 'md-sections' ),
+					'tab' => 'before_footer'
 				)
 			),
 			'elements' => $this->elements( $post_type )
@@ -221,6 +237,26 @@ class md_archive_sections extends md_api {
 	 */
 
 	public function element_fields() {}
+
+	/**
+	 * Render sections full width under the header.
+	 *
+	 * @since 1.1
+	 */
+
+	public function after_header() {
+		$this->html( 'after_header', array( 'loop' => array( 'post_type' => md_get_post_type() ) ) );
+	}
+
+	/**
+	 * Render sections full width above the footer.
+	 *
+	 * @since 1.1
+	 */
+
+	public function before_footer() {
+		$this->html( 'before_footer', array( 'loop' => array( 'post_type' => md_get_post_type() ) ) );
+	}
 
 	/**
 	 * Render configured sections before the primary archive Loop.
@@ -279,6 +315,17 @@ class md_archive_sections extends md_api {
 	}
 
 	/**
+	 * Whether an area prints full-width rows: After Header and Before Footer,
+	 * unless something has already opened an .inner around it.
+	 *
+	 * @since 1.1
+	 */
+
+	protected function is_row( $area ) {
+		return in_array( $area, $this->rows, true ) && ! md_in_inner();
+	}
+
+	/**
 	 * Wrap a run of neighboring sections so they share one row, which
 	 * scrolls horizontally on mobile around the Loop unless one of its
 	 * elements sets scroll to false.
@@ -295,7 +342,12 @@ class md_archive_sections extends md_api {
 		if ( $scroll && in_array( $area, array( 'before_loop', 'after_loop' ), true ) )
 			$classes .= ' scroll-mobile';
 
-		return '<div class="' . esc_attr( $classes ) . '">' . $sections . '</div>';
+		$html = '<div class="' . esc_attr( $classes ) . '">' . $sections . '</div>';
+
+		if ( $this->is_row( $area ) )
+			$html = '<div class="section-row"><div class="inner">' . $html . '</div></div>';
+
+		return $html;
 	}
 
 	/**
@@ -311,6 +363,7 @@ class md_archive_sections extends md_api {
 
 		$output = $group = '';
 		$scroll = true;
+		$is_row = $this->is_row( $area );
 		$is_author = is_author() && empty( $args['query'] ) && empty( $args['in_loop'] );
 		$post_type = $is_author ? 'author' : ( $args['loop']['post_type'] ?? md_get_post_type() );
 		$builder = md_get_post_type_builder( $this->_clean_id, $post_type, $is_author );
@@ -331,7 +384,7 @@ class md_archive_sections extends md_api {
 
 			ob_start();
 
-			$value = call_user_func( $callback, $fields, $post_type, $id, $this->main_query );
+			$value = call_user_func( $callback, $fields, $post_type, $id, $this->main_query, $is_row );
 			$html = ob_get_clean();
 
 			if ( is_string( $value ) )
@@ -343,6 +396,9 @@ class md_archive_sections extends md_api {
 				continue;
 
 			if ( strpos( ' ' . ( $elements[$type]['classes'] ?? '' ) . ' ', ' col-full ' ) !== false ) {
+				if ( $is_row && empty( $elements[$type]['row'] ) )
+					$html = '<div class="section-row"><div class="inner">' . $html . '</div></div>';
+
 				$output .= $this->group( $group, $area, $scroll ) . $html;
 				$group = '';
 				$scroll = true;
@@ -356,7 +412,7 @@ class md_archive_sections extends md_api {
 		$output .= $this->group( $group, $area, $scroll );
 
 		if ( $output )
-			echo '<div class="archive-sections stack">' . $output . '</div>';
+			echo '<div class="' . ( $is_row ? 'section-rows' : 'archive-sections stack' ) . '">' . $output . '</div>';
 	}
 }
 

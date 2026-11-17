@@ -10,6 +10,10 @@
 define( 'MD_TEST_THEME_DIR', getenv( 'MD_THEME_DIR' ) ?: dirname( __DIR__, 3 ) . '/themes/marketers-delight' );
 
 require_once MD_TEST_THEME_DIR . '/tests/inheritance/bootstrap.php';
+
+if ( ! defined( 'MD_DIR' ) )
+	define( 'MD_DIR', MD_TEST_THEME_DIR . '/' );
+
 // WordPress functions the theme's stubs don't cover
 
 if ( ! function_exists( 'post_type_exists' ) ) {

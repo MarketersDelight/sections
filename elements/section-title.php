@@ -21,6 +21,7 @@ function md_section_title_element( $elements ) {
 		'icon' => 'heading',
 		'color' => '#8a5e0e',
 		'classes' => 'col-full',
+		'row' => true,
 		'fields' => 'md_section_title_fields',
 		'callback' => 'md_section_title',
 		'admin_callback' => 'md_section_title_admin_fields'
@@ -95,17 +96,18 @@ function md_section_title_data( $row ) {
  * @since 1.0
  */
 
-function md_section_title( $row, $post_type, $id, $main_query ) {
+function md_section_title( $row, $post_type, $id, $main_query, $full_width = false ) {
 	$data = md_section_title_data( $row );
 
 	if ( ! $data['title'] && ! $data['description'] && ! $data['media'] )
 		return;
 
-	$data['has_sidebar'] = md_has_sidebar();
+	$data['has_sidebar'] = ! $full_width && md_has_sidebar();
 
 	md_title_template( 'section', $data, array(
 		'tag' => 'section',
-		'heading' => ! empty( $row['section_heading'] ) ? $row['section_heading'] : 'h2'
+		'heading' => ! empty( $row['section_heading'] ) ? $row['section_heading'] : 'h2',
+		'inner' => $full_width
 	) );
 }
 

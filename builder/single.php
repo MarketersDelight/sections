@@ -100,8 +100,10 @@ class md_single_sections extends md_archive_sections {
 		else
 			add_action( 'md_hook_content', array( $this, 'without_content' ), 20 );
 
+		add_action( 'md_hook_before_content_box', array( $this, 'after_header' ) );
 		add_action( 'md_hook_before_sidebar', array( $this, 'before_sidebar' ) );
 		add_action( 'md_hook_after_sidebar', array( $this, 'after_sidebar' ) );
+		add_action( 'md_hook_before_footer', array( $this, 'before_footer' ) );
 	}
 
 	/**
