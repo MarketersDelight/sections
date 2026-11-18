@@ -4,7 +4,8 @@ $default_items = get_option( 'posts_per_page' ) ?: 10;
 
 // Which display modes show which fields, matching their md-conditional-* classes
 
-$shows_items = in_array( $display_mode, array( '', 'month' ), true );
+$shows_items = in_array( $display_mode, array( '', 'month', 'post_type' ), true );
+$checked_sources = array_fill_keys( md_query_loop_sources( $row ), true );
 $shows_order = $display_mode !== 'category';
 $shows_category = in_array( $display_mode, array( 'category', 'category_posts' ), true );
 ?>
@@ -15,11 +16,11 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 		<div class="md-query-loop-grid md-full-select">
 			<div class="md-query-loop-field">
 				<?php $fields->field( array( 'builder', $group, 'source' ), array(
-					'type' => 'select',
-					'value' => $row['source'] ?? '',
-					'label' => __( 'Content type', 'md-sections' ),
-					'description' => __( 'Choose the post type to query.', 'md-sections' ),
-					'empty_label' => __( 'Choose content type', 'md-sections' ),
+					'type' => 'checkbox',
+					'value' => $checked_sources,
+					'label' => __( 'Content types', 'md-sections' ),
+					'description' => __( 'Choose one or more post types to query.', 'md-sections' ),
+					'inline' => true,
 					'options' => $sources
 				) ); ?>
 			</div>
@@ -50,11 +51,12 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 					'options' => array(
 						'month' => __( 'Posts grouped by month', 'md-sections' ),
 						'category' => __( 'Category overview', 'md-sections' ),
-						'category_posts' => __( 'List posts by category', 'md-sections' )
+						'category_posts' => __( 'List posts by category', 'md-sections' ),
+						'post_type' => __( 'List posts by post type', 'md-sections' )
 					)
 				) ); ?>
 			</div>
-			<div class="md-query-loop-field md-conditional-item md-conditional-default md-conditional-month<?php echo $shows_items ? ' is-condition' : ''; ?>">
+			<div class="md-query-loop-field md-conditional-item md-conditional-default md-conditional-month md-conditional-post_type<?php echo $shows_items ? ' is-condition' : ''; ?>">
 				<?php $fields->field( array( 'builder', $group, 'items' ), array(
 					'type' => 'number',
 					'value' => $row['items'] ?? '',
@@ -289,6 +291,14 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 						'page_numbers' => __( 'Page numbers', 'md-sections' ),
 						'prev_next' => __( 'Previous/next links', 'md-sections' )
 					)
+				) ); ?>
+			</div>
+			<div class="md-query-loop-field md-query-loop-field-wide">
+				<?php $fields->field( array( 'builder', $group, 'mixed' ), array(
+					'type' => 'checkbox',
+					'value' => $row['mixed'] ?? array(),
+					'description' => __( 'Only applies when this loop shows more than one post type.', 'md-sections' ),
+					'options' => array( 'own_look' => __( 'Use each post type\'s own look', 'md-sections' ) )
 				) ); ?>
 			</div>
 		</div>

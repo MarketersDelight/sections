@@ -40,7 +40,8 @@ function md_query_loop_fields() {
 
 	return array(
 		'source' => array(
-			'type' => 'text'
+			'type' => 'checkbox',
+			'options' => array_keys( md_post_type_options() )
 		),
 		'context' => array(
 			'type' => 'select',
@@ -48,7 +49,11 @@ function md_query_loop_fields() {
 		),
 		'loop_type' => array(
 			'type' => 'select',
-			'options' => array( 'month', 'category', 'category_posts' )
+			'options' => array( 'month', 'category', 'category_posts', 'post_type' )
+		),
+		'mixed' => array(
+			'type' => 'checkbox',
+			'options' => array( 'own_look' )
 		),
 		'items' => array(
 			'type' => 'number',
@@ -174,7 +179,8 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 	if ( ! $query || ( ! $query->have_posts() && $loop_type !== 'category' ) )
 		return false;
 
-	$source = sanitize_key( $fields['source'] );
+	$sources = (array) $query->query['post_type'];
+	$source = reset( $sources );
 	$taxonomy = sanitize_key( $fields['taxonomy'] ?? '' );
 	$pagination = $fields['pagination'] ?? 'none';
 	$default_items = get_option( 'posts_per_page' ) ?: 10;
@@ -249,6 +255,12 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 	if ( ( $fields['byline'] ?? '' ) === 'hide' )
 		$args['remove_byline'] = $args['featured_remove_byline'] = array( 'remove' => true );
 
+	if ( $loop_type === 'post_type' )
+		$args['posts_per_page'] = md_query_loop_count( $fields['items'] ?? '', $default_items );
+
+	if ( ! empty( $fields['mixed']['own_look'] ) )
+		$args['mixed'] = array( 'own_look' => true );
+
 	// A labeled loop is a <section> with its own h2, so its item headings drop a level.
 
 	$label = trim( (string) ( $fields['name'] ?? '' ) );
@@ -268,6 +280,29 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 }
 
 /**
+ * The post types a Query Loop lists: its checked sources, or the single
+ * source saved before Sections 1.1. Unknown post types are left out.
+ *
+ * @since 1.2
+ */
+
+function md_query_loop_sources( $fields ) {
+	$source = $fields['source'] ?? '';
+	$checked = is_array( $source ) ? $source : array( $source => true );
+	$options = md_post_type_options();
+	$sources = array();
+
+	foreach ( $checked as $post_type => $is_checked ) {
+		$post_type = sanitize_key( $post_type );
+
+		if ( $is_checked && isset( $options[$post_type] ) )
+			$sources[] = $post_type;
+	}
+
+	return $sources;
+}
+
+/**
  * Create a bounded WP_Query using the selected source and page context.
  *
  * @since 1.0
@@ -276,11 +311,21 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 function md_query_loop_query( $fields, $id ) {
 	// Check the post type and page context, and stop if either can't be used
 
-	$sources = md_post_type_options();
-	$source = sanitize_key( $fields['source'] ?? '' );
+	$sources = md_query_loop_sources( $fields );
+	$taxonomy = sanitize_key( $fields['taxonomy'] ?? '' );
 	$context = md_query_loop_context( $fields['context'] ?? 'current' );
 
-	if ( ! isset( $sources[$source] ) || $context === null )
+	if ( $taxonomy ) {
+		$in_taxonomy = array();
+
+		foreach ( $sources as $source )
+			if ( is_object_in_taxonomy( $source, $taxonomy ) )
+				$in_taxonomy[] = $source;
+
+		$sources = $in_taxonomy;
+	}
+
+	if ( ! $sources || $context === null )
 		return null;
 
 	// Read the display mode, pagination, and sort settings
@@ -307,7 +352,7 @@ function md_query_loop_query( $fields, $id ) {
 	// Build the query from the settings and the current page's context
 
 	$query = array_merge( array(
-		'post_type' => $source,
+		'post_type' => $sources,
 		'post_status' => 'publish',
 		'posts_per_page' => md_query_loop_count( $fields[$count] ?? '', get_option( 'posts_per_page' ) ?: 10 ),
 		'paged' => $pagination !== 'none' && isset( $_GET[$page_key] ) ? max( 1, absint( wp_unslash( $_GET[$page_key] ) ) ) : 1,
@@ -323,13 +368,9 @@ function md_query_loop_query( $fields, $id ) {
 
 	// Limit to chosen terms (or any term in the taxonomy), then leave out excluded terms
 
-	$taxonomy = sanitize_key( $fields['taxonomy'] ?? '' );
 	$terms = array_filter( array_map( 'trim', explode( ',', (string) ( $fields['terms'] ?? '' ) ) ) );
 
 	if ( $taxonomy ) {
-		if ( ! is_object_in_taxonomy( $source, $taxonomy ) )
-			return null;
-
 		if ( $terms ) {
 			$ids_only = count( array_filter( $terms, 'is_numeric' ) ) === count( $terms );
 			$query['tax_query'][] = array(

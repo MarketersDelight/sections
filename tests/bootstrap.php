@@ -34,6 +34,7 @@ require_once dirname( __DIR__ ) . '/archive-meta/items/comment-count.php';
 require_once dirname( __DIR__ ) . '/archive-meta/items/last-added.php';
 require_once dirname( __DIR__ ) . '/archive-meta/items/text.php';
 require_once dirname( __DIR__ ) . '/elements/query-loop.php';
+require_once dirname( __DIR__ ) . '/elements/post-type-filter.php';
 require_once dirname( __DIR__ ) . '/elements/taxonomy-filter.php';
 require_once dirname( __DIR__ ) . '/elements/section-title.php';
 require_once dirname( __DIR__ ) . '/archive-meta/archive-meta.php';

@@ -46,7 +46,7 @@ function md_archive_meta_post_count( $fields, $post_type, $term = null ) {
 	if ( $source )
 		$count = (int) wp_count_posts( $source )->publish;
 	elseif ( $term )
-		$count = md_term_post_count( $term, $post_type );
+		$count = md_term_post_count( $term, md_archive_meta_term_post_type( $term, $post_type ) );
 	else
 		$count = (int) wp_count_posts( $post_type )->publish;
 
@@ -58,6 +58,26 @@ function md_archive_meta_post_count( $fields, $post_type, $term = null ) {
 		$url = get_post_type_archive_link( $post_type );
 
 	return md_archive_meta_link( md_count_text( $count, $fields, __( '{count} post', 'md-sections' ), __( '{count} posts', 'md-sections' ) ), $url );
+}
+
+/**
+ * The post type a term's count covers. A term shared by several post types
+ * counts all of them, or the one a link narrows its page to (?post_type=).
+ *
+ * @since 1.2
+ */
+
+function md_archive_meta_term_post_type( $term, $post_type ) {
+	$requested = get_query_var( 'post_type' );
+
+	if ( ! function_exists( 'md_is_shared_taxonomy' ) || ! md_is_shared_taxonomy( $term->taxonomy ) )
+		$count_type = $post_type;
+	elseif ( is_string( $requested ) && $requested && get_queried_object_id() === $term->term_id )
+		$count_type = $requested;
+	else
+		$count_type = '';
+
+	return $count_type;
 }
 
 /**
