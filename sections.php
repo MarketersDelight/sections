@@ -7,10 +7,10 @@
  * Drop-in URI: https://marketersdelight.com/dropins/sections/
  * Drop-in Slug: sections
  * Text Domain: md-sections
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 6.2
  * Requires PHP: 7.4
- * Requires MD: 6.2
+ * Requires MD: 6.2.2
  * Icon: dashicons-layout
  * Colors: #3858a4
  * Load Priority: 1
@@ -36,12 +36,13 @@ class md_sections extends md_api {
 		require_once __DIR__ . '/elements/taxonomy-filter.php';
 		require_once __DIR__ . '/elements/section-title.php';
 
-		if ( md_loads_settings() )
-			require_once __DIR__ . '/settings.php';
-
 		require_once __DIR__ . '/archive-meta/archive-meta.php';
 		require_once __DIR__ . '/builder/archive.php';
 		require_once __DIR__ . '/builder/single.php';
+
+		add_action( 'md_load_settings', function() {
+			require_once __DIR__ . '/settings.php';
+		} );
 	}
 
 	/**
