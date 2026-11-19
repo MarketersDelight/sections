@@ -111,6 +111,18 @@ function md_query_loop_fields() {
 		'columns_mobile' => array(
 			'type' => 'number'
 		),
+		'layout' => array(
+			'type' => 'checkbox',
+			'options' => array( 'scroll' )
+		),
+		'image_ratio' => array(
+			'type' => 'select',
+			'options' => array( '4-3', '16-9', '3-2', '1-1' )
+		),
+		'featured_image_size' => array(
+			'type' => 'select',
+			'options' => array_merge( array( 'full' ), get_intermediate_image_sizes() )
+		),
 		'content' => array(
 			'type' => 'select',
 			'options' => array( 'excerpt', 'full', 'hide' )
@@ -234,7 +246,7 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 
 	// Display settings left blank use the Query Loop defaults above
 
-	foreach ( array( 'loop', 'columns', 'columns_mobile', 'content', 'featured_image', 'featured_image_mobile' ) as $key )
+	foreach ( array( 'loop', 'columns', 'columns_mobile', 'content', 'featured_image', 'featured_image_mobile', 'featured_image_size' ) as $key )
 		if ( ( $fields[$key] ?? '' ) !== '' )
 			$args[$key] = $fields[$key];
 
@@ -252,6 +264,9 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 	if ( isset( $args['featured_image_mobile'] ) )
 		$args['featured_featured_image_mobile'] = $args['featured_image_mobile'];
 
+	if ( isset( $args['featured_image_size'] ) )
+		$args['featured_featured_image_size'] = $args['featured_image_size'];
+
 	if ( ( $fields['byline'] ?? '' ) === 'hide' )
 		$args['remove_byline'] = $args['featured_remove_byline'] = array( 'remove' => true );
 
@@ -260,6 +275,12 @@ function md_query_loop( $fields, $post_type, $id = '' ) {
 
 	if ( ! empty( $fields['mixed']['own_look'] ) )
 		$args['mixed'] = array( 'own_look' => true );
+
+	if ( ! empty( $fields['layout']['scroll'] ) )
+		$args['loop_defaults']['classes'] = array( 'scroll' );
+
+	if ( ! empty( $fields['image_ratio'] ) )
+		$args['image_ratio'] = $args['featured_image_ratio'] = $fields['image_ratio'];
 
 	// A labeled loop is a <section> with its own h2, so its item headings drop a level.
 

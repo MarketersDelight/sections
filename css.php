@@ -11,6 +11,10 @@
 .md-query-loop > .pagination { margin-block-start: var(--md-single); }
 .md-query-loop > .prev-next .next { margin-inline-start: auto; }
 
+/* POST TYPE FILTER */
+
+.archive-sections [id] { scroll-margin-block-start: var(--md-single); }
+
 /* AREAS */
 
 .archive-sections:not(:last-child) { margin-block-end: var(--md-single-x); }

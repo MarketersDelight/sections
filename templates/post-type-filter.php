@@ -1,6 +1,7 @@
 <?php
 
 $items = array();
+$anchor = '#' . ( md_section_anchor() ?: 'post-type-filter' );
 $links = array( array(
 	'url' => $term_url,
 	'label' => __( 'All', 'md-sections' ),
@@ -11,7 +12,7 @@ $links = array( array(
 foreach ( $counts as $type => $type_count ) {
 	$type_object = get_post_type_object( $type );
 	$links[] = array(
-		'url' => add_query_arg( 'post_type', $type, $term_url ),
+		'url' => add_query_arg( 'post_type', $type, $term_url ) . $anchor,
 		'label' => $type_object->labels->name,
 		'count' => $type_count,
 		'active' => $type === $current_type
@@ -23,6 +24,7 @@ foreach ( $links as $link )
 
 md_scroller_nav( array(
 	'html' => 'nav',
+	'id' => 'post-type-filter',
 	'label' => __( 'Filter by post type', 'md-sections' ),
 	'classes' => 'taxonomy-filter post-type-filter',
 	'items' => $items

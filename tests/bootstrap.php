@@ -38,3 +38,9 @@ require_once dirname( __DIR__ ) . '/elements/post-type-filter.php';
 require_once dirname( __DIR__ ) . '/elements/taxonomy-filter.php';
 require_once dirname( __DIR__ ) . '/elements/section-title.php';
 require_once dirname( __DIR__ ) . '/archive-meta/archive-meta.php';
+
+if ( ! function_exists( 'get_intermediate_image_sizes' ) ) {
+	function get_intermediate_image_sizes() {
+		return array( 'thumbnail', 'medium', 'medium_large', 'large' );
+	}
+}

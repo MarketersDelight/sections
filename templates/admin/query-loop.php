@@ -234,6 +234,14 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 				) ); ?>
 			</div>
 			<div class="md-query-loop-field">
+				<?php $fields->field( array( 'builder', $group, 'layout' ), array(
+					'type' => 'checkbox',
+					'value' => $row['layout'] ?? array(),
+					'label' => __( 'Layout', 'md-sections' ),
+					'options' => array( 'scroll' => __( 'Scroll sideways', 'md-sections' ) )
+				) ); ?>
+			</div>
+			<div class="md-query-loop-field">
 				<?php $fields->field( array( 'builder', $group, 'content' ), array(
 					'type' => 'select',
 					'value' => $row['content'] ?? '',
@@ -267,6 +275,32 @@ $shows_category = in_array( $display_mode, array( 'category', 'category_posts' )
 					'options' => array(
 						'beside' => __( 'Keep beside', 'md-sections' ),
 						'hide' => __( 'Hide', 'md-sections' )
+					)
+				) ); ?>
+			</div>
+			<div class="md-query-loop-field">
+				<?php $image_sizes = array_merge( array( 'full' ), get_intermediate_image_sizes() );
+				$fields->field( array( 'builder', $group, 'featured_image_size' ), array(
+					'type' => 'select',
+					'value' => $row['featured_image_size'] ?? '',
+					'label' => __( 'Image Size', 'md-sections' ),
+					'description' => __( 'Featured image size.', 'md-sections' ),
+					'empty_label' => __( 'Show full size image', 'md-sections' ),
+					'options' => array_combine( $image_sizes, $image_sizes )
+				) ); ?>
+			</div>
+			<div class="md-query-loop-field">
+				<?php $fields->field( array( 'builder', $group, 'image_ratio' ), array(
+					'type' => 'select',
+					'value' => $row['image_ratio'] ?? '',
+					'label' => __( 'Image Ratio', 'md-sections' ),
+					'description' => __( 'Crop images to one shape.', 'md-sections' ),
+					'empty_label' => __( 'Original', 'md-sections' ),
+					'options' => array(
+						'4-3' => '4:3',
+						'16-9' => '16:9',
+						'3-2' => '3:2',
+						'1-1' => __( 'Square', 'md-sections' )
 					)
 				) ); ?>
 			</div>

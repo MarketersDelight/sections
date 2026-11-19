@@ -19,7 +19,7 @@ foreach ( $terms as $term ) {
 
 md_scroller_nav( array(
 	'html' => 'nav',
-	'label' => __( 'Filter by category', 'md-sections' ),
+	'label' => get_taxonomy( $taxonomy )->labels->name,
 	'classes' => 'taxonomy-filter',
 	'items' => $items
 ) );

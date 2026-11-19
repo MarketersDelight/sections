@@ -103,12 +103,32 @@ function md_section_title( $row, $post_type, $id, $main_query, $full_width = fal
 		return;
 
 	$data['has_sidebar'] = ! $full_width && md_has_sidebar();
+	$anchor = sanitize_title( wp_strip_all_tags( $data['title'] ) ) ?: "section-$id";
+
+	md_section_anchor( $anchor );
 
 	md_title_template( 'section', $data, array(
-		'tag' => 'section',
+		'tag' => 'div',
+		'id' => $anchor,
 		'heading' => ! empty( $row['section_heading'] ) ? $row['section_heading'] : 'h2',
 		'inner' => $full_width
 	) );
+}
+
+/**
+ * The id of the Section Title rendered just before the current row, so the
+ * next row can link to its heading. Pass a value to set it.
+ *
+ * @since 1.2
+ */
+
+function md_section_anchor( $anchor = null ) {
+	static $current = '';
+
+	if ( $anchor !== null )
+		$current = $anchor;
+
+	return $current;
 }
 
 /**

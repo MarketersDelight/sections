@@ -47,6 +47,10 @@ function md_taxonomy_filter_fields() {
 		),
 		'all_label' => array(
 			'type' => 'text'
+		),
+		'orderby' => array(
+			'type' => 'select',
+			'options' => array( 'count', 'term_id' )
 		)
 	);
 }
@@ -83,11 +87,14 @@ function md_taxonomy_filter( $fields, $post_type, $id, $main_query ) {
 		return;
 
 	$excluded = md_taxonomy_filter_excluded_term_ids( $taxonomy, $main_query );
+	$orderby = $fields['orderby'] ?? '';
 	$all = get_terms( array(
 		'taxonomy' => $taxonomy,
 		'hide_empty' => ! empty( $fields['taxonomy_settings']['hide_empty'] ),
 		'pad_counts' => true,
-		'exclude' => $excluded
+		'exclude' => $excluded,
+		'orderby' => $orderby ?: 'name',
+		'order' => $orderby === 'count' ? 'DESC' : 'ASC'
 	) );
 
 	if ( is_wp_error( $all ) || ! $all )

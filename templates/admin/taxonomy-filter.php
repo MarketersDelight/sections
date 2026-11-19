@@ -21,6 +21,16 @@ if ( $options ) {
 		'label' => __( 'All label', 'md-sections' ),
 		'placeholder' => __( 'All', 'md-sections' )
 	) );
+
+	$fields->field( array( 'builder', $group, 'orderby' ), array(
+		'type' => 'select',
+		'label' => __( 'Order', 'md-sections' ),
+		'empty_label' => __( 'Name', 'md-sections' ),
+		'options' => array(
+			'count' => __( 'Most posts', 'md-sections' ),
+			'term_id' => __( 'Order added', 'md-sections' )
+		)
+	) );
 }
 
 else echo '<p>' . __( 'No public taxonomies are registered for this post type.', 'md-sections' ) . '</p>';

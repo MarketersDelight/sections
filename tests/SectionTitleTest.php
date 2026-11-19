@@ -70,8 +70,8 @@ class SectionTitleTest extends MD_InheritanceTestCase {
 			'section_media' => array( 'image' => array( 'id' => 34 ), 'image_width' => 64 )
 		) );
 
-		$this->assertStringStartsWith( '<section class="section-title entry-title wide image-title title-left">', $html );
-		$this->assertStringEndsWith( '</section>', trim( $html ) );
+		$this->assertStringStartsWith( '<div id="blog" class="section-title entry-title wide image-title title-left">', $html );
+		$this->assertStringEndsWith( '</div>', trim( $html ) );
 		$this->assertStringNotContainsString( '<header', $html );
 		$this->assertStringContainsString( '<h2 class="title">Blog</h2>', $html );
 		$this->assertStringContainsString( 'image-34', $html );
@@ -123,7 +123,7 @@ class SectionTitleTest extends MD_InheritanceTestCase {
 
 		$html = $this->render( array( 'section_title' => 'Blog' ) );
 
-		$this->assertStringStartsWith( '<section class="section-title entry-title inline">', $html );
+		$this->assertStringStartsWith( '<div id="blog" class="section-title entry-title inline">', $html );
 	}
 
 	public function test_archive_meta_option_shows_the_meta_tab_items() {

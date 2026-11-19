@@ -8,6 +8,7 @@
 class md_archive_sections extends md_api {
 
 	protected $main_query;
+	protected $titled_entries = false;
 
 	protected $rows = array( 'after_header', 'before_footer' );
 
@@ -56,7 +57,24 @@ class md_archive_sections extends md_api {
 		add_action( 'md_hook_loop_after', array( $this, 'after_loop' ) );
 		add_action( 'md_hook_before_sidebar', array( $this, 'before_sidebar' ) );
 		add_action( 'md_hook_after_sidebar', array( $this, 'after_sidebar' ) );
+		add_filter( 'md_loop_heading_offset', array( $this, 'heading_offset' ), 10, 2 );
 		add_action( 'md_hook_before_footer', array( $this, 'before_footer' ) );
+	}
+
+	/**
+	 * A Section Title before the archive's entries introduces them, so their
+	 * headings drop a level under it.
+	 *
+	 * @since 1.2
+	 */
+
+	public function heading_offset( $offset, $loop ) {
+		$result = $offset;
+
+		if ( $this->titled_entries && empty( $loop['query'] ) && empty( $loop['in_loop'] ) )
+			$result++;
+
+		return $result;
 	}
 
 	/**
@@ -369,6 +387,8 @@ class md_archive_sections extends md_api {
 		$builder = md_get_post_type_builder( $this->_clean_id, $post_type, $is_author );
 		$elements = $this->elements( $post_type );
 
+		md_section_anchor( '' );
+
 		foreach ( $builder as $id => $fields ) {
 			if ( md_builder_row_hidden( $fields ) )
 				continue;
@@ -387,6 +407,9 @@ class md_archive_sections extends md_api {
 			$value = call_user_func( $callback, $fields, $post_type, $id, $this->main_query, $is_row );
 			$html = ob_get_clean();
 
+			if ( $type !== 'section_title' )
+				md_section_anchor( '' );
+
 			if ( is_string( $value ) )
 				$html .= $value;
 
@@ -394,6 +417,9 @@ class md_archive_sections extends md_api {
 
 			if ( $html === '' )
 				continue;
+
+			if ( $area === 'before_loop' && $type === 'section_title' )
+				$this->titled_entries = true;
 
 			if ( strpos( ' ' . ( $elements[$type]['classes'] ?? '' ) . ' ', ' col-full ' ) !== false ) {
 				if ( $is_row && empty( $elements[$type]['row'] ) )
