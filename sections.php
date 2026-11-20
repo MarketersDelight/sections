@@ -36,12 +36,13 @@ class md_sections extends md_api {
 		require_once __DIR__ . '/elements/taxonomy-filter.php';
 		require_once __DIR__ . '/elements/section-title.php';
 
-		if ( md_loads_settings() )
-			require_once __DIR__ . '/settings.php';
-
 		require_once __DIR__ . '/archive-meta/archive-meta.php';
 		require_once __DIR__ . '/builder/archive.php';
 		require_once __DIR__ . '/builder/single.php';
+
+		add_action( 'md_load_settings', function() {
+			require_once __DIR__ . '/settings.php';
+		} );
 	}
 
 	/**
