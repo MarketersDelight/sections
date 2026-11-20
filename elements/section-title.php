@@ -56,7 +56,8 @@ function md_section_title_fields() {
 
 /**
  * Turn a row's settings into the data md_title_template() takes. A row is
- * literal: nothing inherits from the page it's shown on.
+ * literal: nothing inherits from the page it's shown on. An After Header
+ * row's cover is a hero, so its photo can load first.
  *
  * @since 1.0
  */
@@ -71,8 +72,10 @@ function md_section_title_data( $row ) {
 	}
 	else $media = array();
 
-	if ( ! empty( $cover['bg_color'] ) || ! empty( $cover['photo']['id'] ) )
+	if ( ! empty( $cover['bg_color'] ) || ! empty( $cover['photo']['id'] ) ) {
 		$cover['position'] = 'headline_cover';
+		$cover['hero'] = ( $row['builder_area'] ?? '' ) === 'after_header';
+	}
 	else
 		$cover = array();
 
